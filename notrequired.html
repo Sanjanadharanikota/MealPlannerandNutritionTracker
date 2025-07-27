@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meal Planner Dashboard</title>
+    <style>
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-image: linear-gradient(to right, #ffecd2, #fcb69f);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 20px;
+            background-color: #ffffffcc;
+            border-radius: 10px;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        h1 {
+            font-size: 2rem;
+            color: #333;
+        }
+
+        .meal-plan-container {
+            margin-top: 20px;
+        }
+
+        .meal-plan-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #ff6b6b;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        button:hover {
+            background-color: #ff3b3b;
+        }
+
+        .meal-plan-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 20px;
+        }
+
+        .day-column {
+            background-color: #ffe5d9;
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        h2 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: #555;
+        }
+
+        .meal-slot {
+            background-color: #ffcab0;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .meal-item {
+            padding: 5px;
+        }
+
+        .meal-item h6 {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .nutrition-info {
+            font-size: 0.8rem;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Meal Planner Dashboard</h1>
+        </header>
+
+        <div class="meal-plan-container">
+            <div class="meal-plan-header">
+                <button onclick="navigateWeek(-1)">Previous Week</button>
+                <button onclick="generateMealPlan()">Generate Meal Plan</button>
+                <button onclick="navigateWeek(1)">Next Week</button>
+            </div>
+
+            <div class="meal-plan-grid">
+                <div class="day-column">
+                    <h2>Monday</h2>
+                    <div class="meal-slot" data-day="monday" data-meal="breakfast"></div>
+                    <div class="meal-slot" data-day="monday" data-meal="lunch"></div>
+                    <div class="meal-slot" data-day="monday" data-meal="dinner"></div>
+                </div>
+                <div class="day-column">
+                    <h2>Tuesday</h2>
+                    <div class="meal-slot" data-day="tuesday" data-meal="breakfast"></div>
+                    <div class="meal-slot" data-day="tuesday" data-meal="lunch"></div>
+                    <div class="meal-slot" data-day="tuesday" data-meal="dinner"></div>
+                </div>
+                <div class="day-column">
+                    <h2>Wednesday</h2>
+                    <div class="meal-slot" data-day="wednesday" data-meal="breakfast"></div>
+                    <div class="meal-slot" data-day="wednesday" data-meal="lunch"></div>
+                    <div class="meal-slot" data-day="wednesday" data-meal="dinner"></div>
+                </div>
+                <div class="day-column">
+                    <h2>Thursday</h2>
+                    <div class="meal-slot" data-day="thursday" data-meal="breakfast"></div>
+                    <div class="meal-slot" data-day="thursday" data-meal="lunch"></div>
+                    <div class="meal-slot" data-day="thursday" data-meal="dinner"></div>
+                </div>
+                <div class="day-column">
+                    <h2>Friday</h2>
+                    <div class="meal-slot" data-day="friday" data-meal="breakfast"></div>
+                    <div class="meal-slot" data-day="friday" data-meal="lunch"></div>
+                    <div class="meal-slot" data-day="friday" data-meal="dinner"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function generateMealPlan() {
+            alert("Generated sample meal plan!");
+
+            const sampleMeals = [
+                { day: "monday", meal_type: "breakfast", meal_name: "Oatmeal with Fruits", calories: 300, protein: 10, carbs: 50, fats: 5 },
+                { day: "monday", meal_type: "lunch", meal_name: "Grilled Chicken Salad", calories: 400, protein: 30, carbs: 20, fats: 10 },
+                { day: "monday", meal_type: "dinner", meal_name: "Steak with Veggies", calories: 600, protein: 50, carbs: 30, fats: 20 }
+            ];
+
+            renderMeals(sampleMeals);
+        }
+
+        function renderMeals(meals) {
+            document.querySelectorAll('.meal-slot').forEach(slot => {
+                slot.innerHTML = '';
+            });
+
+            meals.forEach(meal => {
+                const slot = document.querySelector(`.meal-slot[data-day="${meal.day}"][data-meal="${meal.meal_type}"]`);
+                if (slot) {
+                    slot.innerHTML = `
+                        <div class="meal-item">
+                            <h6>${meal.meal_name}</h6>
+                            <div class="nutrition-info">
+                                Calories: ${meal.calories}, Protein: ${meal.protein}g, Carbs: ${meal.carbs}g, Fats: ${meal.fats}g
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+        }
+
+        function navigateWeek(direction) {
+            alert(direction === -1 ? "Previous Week" : "Next Week");
+        }
+    </script>
+</body>
+</html>

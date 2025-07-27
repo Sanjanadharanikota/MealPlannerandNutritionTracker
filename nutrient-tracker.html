@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nutrient Tracker</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: url('images/image2.jpg') no-repeat center center/cover;
+            min-height: 100vh;
+        }
+        .navbar {
+            background-color: #343a40 !important;
+        }
+        .navbar-brand, .nav-link {
+            color: #ffffff !important;
+        }
+        .navbar-dark .navbar-nav .nav-link:hover,
+        .navbar-dark .navbar-nav .nav-link.active {
+            color: #ffc107 !important;
+        }
+        .container-box {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 30px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+        .progress {
+            height: 25px;
+            margin-bottom: 10px;
+        }
+        .nutrient-card {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .table th, .table td {
+            vertical-align: middle;
+        }
+        .footer {
+            margin-top: 60px;
+            color: #fff;
+            text-align: center;
+            font-size: 14px;
+        }
+        .btn-custom {
+            background-color: #ffc107;
+            border: none;
+            color: white;
+            font-weight: bold;
+        }
+        .btn-custom:hover {
+            background-color: #e0a800;
+        }
+        .command-palette {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+        .command-palette .list-group-item {
+            padding: 10px;
+            cursor: pointer;
+            border: none;
+        }
+        .command-palette .list-group-item:hover {
+            background-color: #f8f9fa;
+        }
+        .command-palette .list-group-item small {
+            display: block;
+            color: #6c757d;
+        }
+        .command-palette .list-group-item.selected {
+            background-color: #e9ecef;
+        }
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            padding: 10px;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="dashboard.html">
+                <i class="fas fa-utensils me-2"></i>Meal Planner
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="dashboard.html">🧭Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="meal_plan.html">🍽My Meals</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="nutrient-tracker.html">📈Nutrient Tracker</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="shopping-list.html">🛒Shopping List</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contact.html">📞Contact</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="profile.html">👤Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="about.html">ℹ About</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="container-box">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>Daily Nutrient Tracker</h2>
+                <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#analyzeModal">
+                    <i class="fas fa-calculator me-2"></i>Analyze Food
+                </button>
+            </div>
+            
+            <!-- Date Selector -->
+            <div class="row mb-4">
+                <div class="col-md-6 mx-auto">
+                    <input type="date" id="dateSelector" class="form-control" value="">
+                </div>
+            </div>
+
+            <!-- Nutrient Progress -->
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="nutrient-card">
+                        <h5>Calories</h5>
+                        <div class="progress">
+                            <div id="caloriesProgress" class="progress-bar bg-primary" role="progressbar"></div>
+                        </div>
+                        <small><span id="caloriesValue">0</span> / <span id="caloriesGoal">2000</span> kcal</small>
+                    </div>
+
+                    <div class="nutrient-card">
+                        <h5>Protein</h5>
+                        <div class="progress">
+                            <div id="proteinProgress" class="progress-bar bg-success" role="progressbar"></div>
+                        </div>
+                        <small><span id="proteinValue">0</span> / <span id="proteinGoal">50</span> g</small>
+                    </div>
+
+                    <div class="nutrient-card">
+                        <h5>Carbohydrates</h5>
+                        <div class="progress">
+                            <div id="carbsProgress" class="progress-bar bg-warning" role="progressbar"></div>
+                        </div>
+                        <small><span id="carbsValue">0</span> / <span id="carbsGoal">275</span> g</small>
+                    </div>
+
+                    <div class="nutrient-card">
+                        <h5>Fats</h5>
+                        <div class="progress">
+                            <div id="fatsProgress" class="progress-bar bg-danger" role="progressbar"></div>
+                        </div>
+                        <small><span id="fatsValue">0</span> / <span id="fatsGoal">55</span> g</small>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="nutrient-card">
+                        <h5>Today's Meals</h5>
+                        <div id="mealsList" class="list-group">
+                            <!-- Meals will be listed here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Analyze Food Modal -->
+    <div class="modal fade" id="analyzeModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Nutrition Analyzer</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="analyzeForm">
+                        <div class="mb-3 position-relative">
+                            <label class="form-label">Food Description</label>
+                            <textarea class="form-control" id="foodDescription" rows="3" 
+                                placeholder="Enter food items with quantities (e.g., 1 cup rice, 100g chicken breast)"></textarea>
+                            <!-- Command Palette -->
+                            <div id="commandPalette" class="command-palette" style="display: none;">
+                                <ul id="suggestionList" class="list-group">
+                                    <li class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Loading...</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-warning w-100">
+                            <i class="fas fa-calculator me-2"></i>Analyze
+                        </button>
+                    </form>
+                    <div id="analysisResults" class="mt-4" style="display: none;">
+                        <h5>Analysis Results</h5>
+                        <div class="nutrient-card">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p><strong>Calories:</strong> <span id="analyzeCalories">0</span> kcal</p>
+                                    <p><strong>Protein:</strong> <span id="analyzeProtein">0</span> g</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p><strong>Carbs:</strong> <span id="analyzeCarbs">0</span> g</p>
+                                    <p><strong>Fats:</strong> <span id="analyzeFats">0</span> g</p>
+                                </div>
+                            </div><!-- 
+                            <button class="btn btn-primary w-100 mt-3" id="addToMealBtn">
+                                <i class="fas fa-plus me-2"></i>Add to Today's Meals
+                            </button>-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Nutritionix API configuration
+        const NUTRITIONIX_API = {
+            APP_ID: '86775e6a', // Replace with your Nutritionix App ID
+            API_KEY: '8bf58ac739d4946a7e7ff4c15005813a', // Replace with your Nutritionix API Key
+            SEARCH_ENDPOINT: 'https://trackapi.nutritionix.com/v2/search/instant',
+            NUTRIENTS_ENDPOINT: 'https://trackapi.nutritionix.com/v2/natural/nutrients'
+        };
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = '/login.html';
+                return;
+            }
+
+            // Set today's date as default
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('dateSelector').value = today;
+
+            // Load initial data
+            loadNutrients(today);
+
+            // Add date change listener
+            document.getElementById('dateSelector').addEventListener('change', function(e) {
+                loadNutrients(e.target.value);
+            });
+
+            // Command palette logic with debouncing
+            const foodDescriptionInput = document.getElementById('foodDescription');
+            const commandPalette = document.getElementById('commandPalette');
+            const suggestionList = document.getElementById('suggestionList');
+            let debounceTimeout;
+
+            foodDescriptionInput.addEventListener('input', function() {
+                clearTimeout(debounceTimeout);
+                debounceTimeout = setTimeout(async () => {
+                    const query = foodDescriptionInput.value.trim().toLowerCase();
+                    if (query.length < 2) {
+                        commandPalette.style.display = 'none';
+                        return;
+                    }
+
+                    // Show loading spinner
+                    suggestionList.innerHTML = '<li class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Loading...</li>';
+                    commandPalette.style.display = 'block';
+
+                    try {
+                        const response = await fetch(NUTRITIONIX_API.SEARCH_ENDPOINT, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'x-app-id': NUTRITIONIX_API.APP_ID,
+                                'x-app-key': NUTRITIONIX_API.API_KEY
+                            },
+                            body: JSON.stringify({ query })
+                        });
+
+                        if (!response.ok) {
+                            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                        }
+
+                        const data = await response.json();
+                        const filteredSuggestions = (data.common || []).map(item => ({
+                            name: item.food_name,
+                            description: `${item.serving_qty} ${item.serving_unit}`,
+                            nutrients: {
+                                calories: item.nf_calories || 0,
+                                protein: item.nf_protein || 0,
+                                carbs: item.nf_total_carbohydrate || 0,
+                                fats: item.nf_total_fat || 0
+                            }
+                        }));
+
+                        if (filteredSuggestions.length === 0) {
+                            suggestionList.innerHTML = '<li class="list-group-item">No suggestions found</li>';
+                            commandPalette.style.display = 'block';
+                            return;
+                        }
+
+                        // Populate suggestion list
+                        suggestionList.innerHTML = filteredSuggestions.map(food => `
+                            <li class="list-group-item" data-food='${JSON.stringify(food)}'>
+                                <strong>${food.name}</strong>
+                                <small>${food.description}</small>
+                            </li>
+                        `).join('');
+                        commandPalette.style.display = 'block';
+
+                        // Handle suggestion click
+                        suggestionList.querySelectorAll('.list-group-item').forEach(item => {
+                            item.addEventListener('click', function() {
+                                const food = JSON.parse(this.dataset.food);
+                                foodDescriptionInput.value = food.description;
+                                commandPalette.style.display = 'none';
+
+                                // Auto-populate analysis results
+                                document.getElementById('analysisResults').style.display = 'block';
+                                document.getElementById('analyzeCalories').textContent = Math.round(food.nutrients.calories);
+                                document.getElementById('analyzeProtein').textContent = Math.round(food.nutrients.protein);
+                                document.getElementById('analyzeCarbs').textContent = Math.round(food.nutrients.carbs);
+                                document.getElementById('analyzeFats').textContent = Math.round(food.nutrients.fats);
+                                window.lastAnalysis = food.nutrients;
+                            });
+                        });
+                    } catch (error) {
+                        console.error('Error fetching suggestions:', error);
+                        suggestionList.innerHTML = '<li class="list-group-item text-danger">Error loading suggestions</li>';
+                        commandPalette.style.display = 'block';
+                    }
+                }, 300);
+            });
+
+            // Keyboard navigation for command palette
+            foodDescriptionInput.addEventListener('keydown', function(e) {
+                const items = suggestionList.querySelectorAll('.list-group-item');
+                if (!items.length) return;
+
+                let selectedIndex = Array.from(items).findIndex(item => item.classList.contains('selected'));
+
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    if (selectedIndex < items.length - 1) {
+                        items[selectedIndex]?.classList.remove('selected');
+                        selectedIndex++;
+                        items[selectedIndex].classList.add('selected');
+                        items[selectedIndex].scrollIntoView({ block: 'nearest' });
+                    }
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    if (selectedIndex > 0) {
+                        items[selectedIndex]?.classList.remove('selected');
+                        selectedIndex--;
+                        items[selectedIndex].classList.add('selected');
+                        items[selectedIndex].scrollIntoView({ block: 'nearest' });
+                    }
+                } else if (e.key === 'Enter' && selectedIndex >= 0) {
+                    e.preventDefault();
+                    items[selectedIndex].click();
+                }
+            });
+
+            // Hide command palette when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!commandPalette.contains(e.target) && e.target !== foodDescriptionInput) {
+                    commandPalette.style.display = 'none';
+                }
+            });
+        });
+
+        async function loadNutrients(date) {
+            try {
+                const response = await fetch('http://localhost:5000/api/meals', {
+                    headers: {
+                        'x-auth-token': localStorage.getItem('token')
+                    }
+                });
+                if (!response.ok) {
+                    throw new Error('Failed to load meals');
+                }
+                const meals = await response.json();
+                
+                // Filter meals for selected date
+                const dayMeals = meals.filter(meal => meal.date.startsWith(date));
+
+                // Calculate total nutrients
+                let totals = {
+                    calories: 0,
+                    protein: 0,
+                    carbs: 0,
+                    fats: 0
+                };
+
+                dayMeals.forEach(meal => {
+                    totals.calories += meal.nutrients?.calories || 0;
+                    totals.protein += meal.nutrients?.protein || 0;
+                    totals.carbs += meal.nutrients?.carbs || 0;
+                    totals.fats += meal.nutrients?.fats || 0;
+                });
+
+                // Update progress bars
+                updateProgress('calories', totals.calories, 2000);
+                updateProgress('protein', totals.protein, 50);
+                updateProgress('carbs', totals.carbs, 275);
+                updateProgress('fats', totals.fats, 55);
+
+                // Update meals list
+                const mealsList = document.getElementById('mealsList');
+                mealsList.innerHTML = dayMeals.map(meal => `
+                    <div class="list-group-item">
+                        <h6>${meal.name}</h6>
+                        <small>
+                            🔥 ${meal.nutrients?.calories || 0} kcal | 
+                            🥩 ${meal.nutrients?.protein || 0}g | 
+                            🍚 ${meal.nutrients?.carbs || 0}g | 
+                            🥑 ${meal.nutrients?.fats || 0}g
+                        </small>
+                    </div>
+                `).join('') || '<div class="text-center">No meals recorded for this date</div>';
+
+            } catch (error) {
+                console.error('Error loading nutrients:', error);
+                alert('Failed to load meals');
+            }
+        }
+
+        function updateProgress(nutrient, value, goal) {
+            const percentage = Math.min((value / goal) * 100, 100);
+            document.getElementById(`${nutrient}Progress`).style.width = `${percentage}%`;
+            document.getElementById(`${nutrient}Value`).textContent = Math.round(value);
+            document.getElementById(`${nutrient}Goal`).textContent = goal;
+        }
+
+        // Handle food analysis
+        document.getElementById('analyzeForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const description = document.getElementById('foodDescription').value;
+            const commandPalette = document.getElementById('commandPalette');
+
+            try {
+                const response = await fetch(NUTRITIONIX_API.NUTRIENTS_ENDPOINT, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-app-id': NUTRITIONIX_API.APP_ID,
+                        'x-app-key': NUTRITIONIX_API.API_KEY
+                    },
+                    body: JSON.stringify({ query: description })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                if (data.foods && data.foods.length > 0) {
+                    const nutrients = data.foods.reduce((acc, food) => ({
+                        calories: acc.calories + (food.nf_calories || 0),
+                        protein: acc.protein + (food.nf_protein || 0),
+                        carbs: acc.carbs + (food.nf_total_carbohydrate || 0),
+                        fats: acc.fats + (food.nf_total_fat || 0)
+                    }), { calories: 0, protein: 0, carbs: 0, fats: 0 });
+
+                    // Show results
+                    document.getElementById('analysisResults').style.display = 'block';
+                    document.getElementById('analyzeCalories').textContent = Math.round(nutrients.calories);
+                    document.getElementById('analyzeProtein').textContent = Math.round(nutrients.protein);
+                    document.getElementById('analyzeCarbs').textContent = Math.round(nutrients.carbs);
+                    document.getElementById('analyzeFats').textContent = Math.round(nutrients.fats);
+                    window.lastAnalysis = nutrients;
+
+                    // Hide command palette
+                    commandPalette.style.display = 'none';
+                } else {
+                    alert('No nutritional data found for the provided description');
+                }
+            } catch (error) {
+                console.error('Error analyzing food:', error);
+                alert(error.message.includes('429') ? 'API rate limit exceeded. Please try again later.' : 'Failed to analyze food');
+            }
+        });
+
+        // Handle adding analyzed food to meals
+        document.getElementById('addToMealBtn').addEventListener('click', async function() {
+            if (!window.lastAnalysis) {
+                alert('Please analyze food first');
+                return;
+            }
+
+            const description = document.getElementById('foodDescription').value;
+            try {
+                const response = await fetch('http://localhost:5000/api/meals', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-auth-token': localStorage.getItem('token')
+                    },
+                    body: JSON.stringify({
+                        name: description,
+                        date: document.getElementById('dateSelector').value,
+                        nutrients: window.lastAnalysis
+                    })
+                });
+
+                if (response.ok) {
+                    // Reload nutrients
+                    loadNutrients(document.getElementById('dateSelector').value);
+                    // Clear form and hide results
+                    document.getElementById('analyzeForm').reset();
+                    document.getElementById('analysisResults').style.display = 'none';
+                    // Close modal
+                    bootstrap.Modal.getInstance(document.getElementById('analyzeModal')).hide();
+                    delete window.lastAnalysis;
+                } else {
+                    const data = await response.json();
+                    alert(data.message || 'Failed to add meal');
+                }
+            } catch (error) {
+                console.error('Error adding meal:', error);
+                alert('Failed to add meal');
+            }
+        });
+    </script>
+</body>
+</html>

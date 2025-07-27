@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Meal Planner & Nutrition Tracker</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    body {
+      background: linear-gradient(to right, #1a1a19, #e2d1c3);
+      background: url('images/image2.jpg') no-repeat center center/cover;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    .navbar-dark .navbar-nav .nav-link {
+      color: #ffffff;
+    }
+    .navbar-dark .navbar-nav .nav-link:hover {
+      color: #ffc107;
+    }
+    .container-box {
+      background: #ffffff;
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      padding: 30px;
+      margin-top: 50px;
+    }
+    h2 {
+      font-weight: 700;
+      margin-bottom: 20px;
+      color: #333;
+    }
+    label {
+      font-weight: 500;
+    }
+    .btn-custom {
+      background-color: #ffc107;
+      border: none;
+      color: white;
+      font-weight: bold;
+    }
+    .btn-custom:hover {
+      background-color: #e0a800;
+    }
+    .recommendation-box {
+      max-height: 500px;
+      overflow-y: auto;
+      background: #f9f9f9;
+      border-radius: 15px;
+      padding: 20px;
+    }
+    .list-group-item {
+      border-radius: 10px;
+      margin-bottom: 10px;
+      background: #ffffff;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+    .list-group-item h5 {
+      margin-bottom: 5px;
+      color: #333;
+    }
+    .list-group-item small {
+      color: #6c757d;
+    }
+    .loading-spinner {
+      text-align: center;
+      padding: 10px;
+      color: #6c757d;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand fw-bold" href="#">Meal Planner 🥗</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="dashboard.html">🧭Dashboard</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="meal_plan.html">🍽️My Meals</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="nutrient-tracker.html">📈Nutrient Tracker</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="shopping-list.html">🛒Shopping List</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="contact.html">📞Contact</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="profile.html">👤Profile</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="about.html">ℹ️ About</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="row g-4">
+      <!-- Meal Entry Form -->
+      <div class="col-md-6">
+        <div class="container-box">
+          <h2>Add Your Meal</h2>
+          <form id="mealForm">
+            <div class="mb-3">
+              <label for="slot">Meal Slot</label>
+              <select class="form-select" id="slot" required>
+                <option>Breakfast</option>
+                <option>Lunch</option>
+                <option>Dinner</option>
+                <option>Snack</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="mealName">Meal Name</label>
+              <input type="text" class="form-control" id="mealName" placeholder="e.g., Grilled Chicken Salad" required>
+            </div>
+            <div class="mb-3">
+              <label for="calories">Calories (kcal)</label>
+              <input type="number" class="form-control" id="calories" required>
+            </div>
+            <div class="mb-3">
+              <label for="protein">Protein (g)</label>
+              <input type="number" class="form-control" id="protein" required>
+            </div>
+            <div class="mb-3">
+              <label for="carbs">Carbohydrates (g)</label>
+              <input type="number" class="form-control" id="carbs" required>
+            </div>
+            <div class="mb-3">
+              <label for="fats">Fats (g)</label>
+              <input type="number" class="form-control" id="fats" required>
+            </div>
+            <button type="submit" class="btn btn-custom w-100">Add Meal</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Meal Recommendations -->
+      <div class="col-md-6">
+        <div class="container-box">
+          <h2>Meal Recommendations 🍽️</h2>
+          <div class="mb-3">
+            <label for="mealType">Meal Type</label>
+            <select class="form-select" id="mealType">
+              <option value="">Any</option>
+              <option value="breakfast">Breakfast</option>
+              <option value="lunch">Lunch</option>
+              <option value="dinner">Dinner</option>
+              <option value="snack">Snack</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="dietType">Diet Type</label>
+            <select class="form-select" id="dietType">
+              <option value="">Any</option>
+              <option value="vegetarian">Vegetarian</option>
+              <option value="vegan">Vegan</option>
+              <option value="keto">Ketogenic</option>
+              <option value="balanced">Balanced</option>
+              <option value="gluten-free">Gluten Free</option>
+              <option value="low-carb">Low Carb</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="calorieRange">Calorie Range</label>
+            <select class="form-select" id="calorieRange">
+              <option value="">Any</option>
+              <option value="low">Below 300 kcal</option>
+              <option value="medium">300-600 kcal</option>
+              <option value="high">Above 600 kcal</option>
+            </select>
+          </div>
+          <button class="btn btn-warning w-100 mb-3" onclick="getRecommendations()">Get Recommendations</button>
+          <div class="recommendation-box">
+            <ul class="list-group" id="recommendationList">
+              <!-- Recommendations will appear here -->
+            </ul>
+            <div class="text-center mt-2">
+              <small>Powered by <a href="https://spoonacular.com/food-api" target="_blank">Spoonacular</a></small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Spoonacular API configuration
+    const SPOONACULAR_API = {
+      API_KEY: '325da1d14441419ab0277b594eed728a', // Replace with your Spoonacular API Key
+      SEARCH_ENDPOINT: 'https://api.spoonacular.com/recipes/complexSearch',
+      INFO_ENDPOINT: 'https://api.spoonacular.com/recipes'
+    };
+
+    // Check authentication
+    document.addEventListener('DOMContentLoaded', function() {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        window.location.href = '/login.html';
+        return;
+      }
+      loadMeals();
+    });
+
+    // Load existing meals
+    async function loadMeals() {
+      try {
+        const response = await fetch('http://localhost:5000/api/meals', {
+          headers: {
+            'x-auth-token': localStorage.getItem('token')
+          }
+        });
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        const meals = await response.json();
+        displayMeals(meals);
+      } catch (error) {
+        console.error('Error loading meals:', error);
+        alert('Failed to load meals');
+      }
+    }
+
+    // Display meals in the recommendations section
+    function displayMeals(meals) {
+      const recommendationList = document.getElementById('recommendationList');
+      recommendationList.innerHTML = meals.map(meal => `
+        <li class="list-group-item">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <h5>${meal.name}</h5>
+              <small>${meal.type} - ${meal.nutrients.calories} kcal</small>
+            </div>
+            <button class="btn btn-danger btn-sm" onclick="deleteMeal('${meal._id}')">Delete</button>
+          </div>
+        </li>
+      `).join('');
+    }
+
+    // Handle meal form submission
+    document.getElementById('mealForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const mealData = {
+        name: document.getElementById('mealName').value,
+        type: document.getElementById('slot').value.toLowerCase(),
+        date: new Date().toISOString(),
+        nutrients: {
+          calories: Number(document.getElementById('calories').value),
+          protein: Number(document.getElementById('protein').value),
+          carbs: Number(document.getElementById('carbs').value),
+          fats: Number(document.getElementById('fats').value)
+        }
+      };
+
+      try {
+        const response = await fetch('http://localhost:5000/api/meals', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-auth-token': localStorage.getItem('token')
+          },
+          body: JSON.stringify(mealData)
+        });
+
+        if (response.ok) {
+          alert('Meal added successfully!');
+          this.reset();
+          loadMeals();
+        } else {
+          const data = await response.json();
+          alert(data.message || 'Error adding meal');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Error adding meal');
+      }
+    });
+
+    // Delete a meal
+    async function deleteMeal(mealId) {
+      if (!confirm('Are you sure you want to delete this meal?')) return;
+
+      try {
+        const response = await fetch(`http://localhost:5000/api/meals/${mealId}`, {
+          method: 'DELETE',
+          headers: {
+            'x-auth-token': localStorage.getItem('token')
+          }
+        });
+
+        if (response.ok) {
+          alert('Meal deleted successfully!');
+          loadMeals();
+        } else {
+          const data = await response.json();
+          alert(data.message || 'Error deleting meal');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Error deleting meal');
+      }
+    }
+
+    // Get meal recommendations from Spoonacular API
+    async function getRecommendations() {
+      const type = document.getElementById('mealType').value;
+      const diet = document.getElementById('dietType').value;
+      const calRange = document.getElementById('calorieRange').value;
+      const list = document.getElementById('recommendationList');
+
+      // Show loading spinner
+      list.innerHTML = '<li class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Loading recommendations...</li>';
+
+      // Build query parameters for complex search
+      const searchParams = new URLSearchParams({
+        apiKey: SPOONACULAR_API.API_KEY,
+        number: '10', // Limit to 10 results to stay within free plan quota
+        addRecipeNutrition: 'true', // Include nutrition data directly
+        sort: 'random' // Randomize results
+      });
+
+      // Add filters
+      if (type) {
+        searchParams.append('type', type);
+      }
+      if (diet) {
+        searchParams.append('diet', diet);
+      }
+      if (calRange) {
+        if (calRange === 'low') {
+          searchParams.append('maxCalories', '300');
+        } else if (calRange === 'medium') {
+          searchParams.append('minCalories', '300');
+          searchParams.append('maxCalories', '600');
+        } else if (calRange === 'high') {
+          searchParams.append('minCalories', '600');
+        }
+      }
+
+      try {
+        // Step 1: Search for recipes
+        const searchResponse = await fetch(`${SPOONACULAR_API.SEARCH_ENDPOINT}?${searchParams.toString()}`, {
+          headers: {
+            'Accept': 'application/json'
+          }
+        });
+
+        if (!searchResponse.ok) {
+          throw new Error(`HTTP ${searchResponse.status}: ${searchResponse.statusText}`);
+        }
+
+        const searchData = await searchResponse.json();
+        const recipes = searchData.results || [];
+
+        // Step 2: Map recipes to required format
+        const filteredMeals = recipes.map(recipe => ({
+          name: recipe.title,
+          type: type || recipe.dishTypes?.find(type => ['breakfast', 'lunch', 'dinner', 'snack'].includes(type)) || 'unknown',
+          diet: diet || recipe.diets?.find(d => ['vegetarian', 'vegan', 'ketogenic', 'gluten free', 'low carb', 'balanced'].includes(d.toLowerCase())) || 'balanced',
+          nutrients: {
+            calories: Math.round(recipe.nutrition?.nutrients.find(n => n.name === 'Calories')?.amount || 0),
+            protein: Math.round(recipe.nutrition?.nutrients.find(n => n.name === 'Protein')?.amount || 0),
+            carbs: Math.round(recipe.nutrition?.nutrients.find(n => n.name === 'Carbohydrates')?.amount || 0),
+            fats: Math.round(recipe.nutrition?.nutrients.find(n => n.name === 'Fat')?.amount || 0)
+          }
+        }));
+
+        // Display recommendations
+        list.innerHTML = '';
+        if (filteredMeals.length === 0) {
+          list.innerHTML = "<li class='list-group-item text-danger'>No meals found for your selection.</li>";
+        } else {
+          filteredMeals.forEach(meal => {
+            const li = document.createElement('li');
+            li.className = 'list-group-item';
+            li.innerHTML = `
+              <h5>${meal.name}</h5>
+              <small>
+                ${meal.type.charAt(0).toUpperCase() + meal.type.slice(1)} | ${meal.diet.charAt(0).toUpperCase() + meal.diet.slice(1)}<br>
+                Calories: ${meal.nutrients.calories} kcal | Protein: ${meal.nutrients.protein}g | Carbs: ${meal.nutrients.carbs}g | Fats: ${meal.nutrients.fats}g
+              </small>
+            `;
+            list.appendChild(li);
+          });
+        }
+      } catch (error) {
+        console.error('Error fetching recommendations:', error);
+        list.innerHTML = `<li class='list-group-item text-danger'>Error loading recommendations: ${error.message.includes('402') ? 'API quota exceeded. Please try again tomorrow.' : error.message.includes('429') ? 'API rate limit exceeded. Please try again later.' : 'Please try again.'}</li>`;
+      }
+    }
+  </script>
+</body>
+</html>

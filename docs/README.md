@@ -26,7 +26,7 @@ A full-stack web application for planning meals, tracking nutrition, and managin
 - Responsive UI with Bootstrap
 
 ## Screenshots
-*(Add screenshots of dashboard, meal planner, nutrient tracker, shopping list, etc.)*
+Please refer to the FSD.pdf document located in the Documents folder, pages 70 to 75, for detailed screenshots and UI designs of the dashboard, meal planner, nutrition tracker, shopping list, and other key features.
 
 ## Tech Stack
 - **Frontend:** HTML5, CSS3, Bootstrap 5, JavaScript, Chart.js
@@ -117,8 +117,8 @@ NUTRITIONIX_APP_KEY=your-nutritionix-app-key
 - Nutritionix API credentials are required for food analysis
 
 ## License
-Specify your license here (e.g., MIT, Apache-2.0, etc.)
+This project is for personal/non-commercial use.
 
 ---
 
-*Project by [Your Name]. For questions or contributions, open an issue or pull request.*
+

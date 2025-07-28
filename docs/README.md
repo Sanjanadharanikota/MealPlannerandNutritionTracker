@@ -26,7 +26,7 @@ A full-stack web application for planning meals, tracking nutrition, and managin
 - Responsive UI with Bootstrap
 
 ## Screenshots
-Please refer to the FSD.pdf document located in the Documents folder, pages 70 to 75, for detailed screenshots and UI designs of the dashboard, meal planner, nutrition tracker, shopping list, and other key features.
+Please refer to the FSD.pdf(https://github.com/Sanjanadharanikota/MealPlannerandNutritionTracker/blob/main/docs/fsd.pdf) document located in the Documents folder, pages 70 to 75, for detailed screenshots and UI designs of the dashboard, meal planner, nutrition tracker, shopping list, and other key features.
 
 ## Tech Stack
 - **Frontend:** HTML5, CSS3, Bootstrap 5, JavaScript, Chart.js
